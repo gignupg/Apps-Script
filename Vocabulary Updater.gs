@@ -27,6 +27,7 @@ function myMenu() {
   var ui = SpreadsheetApp.getUi();
   ui.createMenu('Vocabulary')
   .addItem("Add new words", "execute")
+  .addItem("Update the latest 50 to 200", "atVoice")
   .addToUi();
 }
 
