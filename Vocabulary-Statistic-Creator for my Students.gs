@@ -57,14 +57,14 @@ function createVocabList() {
   
 function looper() {
   for (var i = 0; i < paragraphs.length; i++) {
-    if (paragraphs[i].getText().match(Utilities.formatDate(new Date(), "GTM+2", "yy"))) {
+    if (paragraphs[i].getText().match(/\d\d\/\d\d\/20\d\d/)) {
       iStart = i + 1;
       var k = iStart;
       break;
     }
   }
   for (; k < paragraphs.length; k++) {
-    if (paragraphs[k].getText().match(Utilities.formatDate(new Date(), "GTM+2", "yy"))) {
+    if (paragraphs[k].getText().match(/\d\d\/\d\d\/20\d\d/)) {
       iEnd = k;
       break;
     }
