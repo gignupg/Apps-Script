@@ -5,6 +5,13 @@ var totalRows = audioSheet.getLastRow()
 var totalRows3 = audio3Sheet.getLastRow()
 var shortWords = []
 
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Filter Menu')
+  .addItem('Filter out sentences with 3 words or less', 'myFunction')
+  .addToUi();
+}
+
 function myFunction() {
 
   for (var i = totalRows; i >= 1; i--){
@@ -17,11 +24,13 @@ function myFunction() {
     }
   }
 
-  var firstRow = totalRows3 + 1
-  audio3Sheet.getRange(firstRow,1).activate()
-    
-  for (var i = 0; i <= shortWords.length; i++){
-    spreadsheet.getCurrentCell().setValue(shortWords[i])
-    spreadsheet.getCurrentCell().offset(1, 0).activate()
+  if (!shortWords){
+    var firstRow = totalRows3 + 1
+    audio3Sheet.getRange(firstRow,1).activate()
+      
+    for (var i = 0; i <= shortWords.length; i++){
+      spreadsheet.getCurrentCell().setValue(shortWords[i])
+      spreadsheet.getCurrentCell().offset(1, 0).activate()
+    }
   }
 }
