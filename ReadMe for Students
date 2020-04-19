@@ -1,0 +1,65 @@
+Anleitung
+
+Schritt 1: Einen neuen Ordner erstellen
+Nur wenn du einen neuen Schüler hast oder eine neue Gruppe von Schülern!
+
+Diesen Link öffnen: ???
+In Zeile 1 musst du den Namen vom Schüler/Kurs schreiben! Z.B: 
+var student = "Student Name";
+In Zeile 6 musst entweder Schüler oder Lehrer schreiben, je nachdem in welchen Ordner es soll.
+Jetzt speichern und dann ausführen. 
+
+Schritt 2: 
+
+Das Textdokument des neuen Schülers/der neuen Gruppe öffnen! 
+Auf Herramientas klicken, dann auf editor de script klicken!
+Oben links (über arquivo) musst du einen Titel aussuchen! Der Titel ist unwichtig! 
+Lösche den Code!
+Füge den folgenden Code ein:
+
+
+stats.student = "Student Name";
+
+
+function onOpen() {
+  var ui = DocumentApp.getUi();
+  ui.createMenu('Übersicht')
+  .addItem('Übersicht erstellen', 'vocabList')
+  .addItem('Struktur erstellen', 'structure')
+  .addToUi();
+}
+
+
+function vocabList() {
+  stats.createVocabList();
+}
+
+
+function structure() {
+  stats.structureCreator();
+}
+
+
+In Zeile 1 schreibe den Namen des Schülers/Kurses. Z.B: stats.student = “Student Name”;
+Klicke im Menü auf Recursos und dann auf Bibliotecas
+Klicke in das Feld add library und füge das Folgende ein:
+???
+Klicke auf add library
+Wähle Version 1 aus! 
+Speichern aber nicht ausführen!
+
+Schritt 3:
+
+Wenn du mit deinem Unterricht fertig bist und die neuen Vokabeln zur Liste hinzufügen möchtest mache das Folgende:
+Gehe zurück in das Texdokument bzw. lade das Texdokument neu! 
+Im Menu klicke auf Übersicht dann auf Übersicht erstellen!
+
+Wenn es eine Sicherheitsabfrage von Google gibt akzeptiere! 
+Wahrscheinlich musst du auf advanced klicken und dann auf Sicherheit. 
+
+Vergesse nicht das Datum!
+
+Nur die Vokabeln zwischen dem ersten und dem zweiten Datum werden hinzugefügt! 
+
+
+ 
