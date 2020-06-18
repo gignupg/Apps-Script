@@ -1,22 +1,58 @@
 var token = "hidden";
 var telegramUrl = "hidden" + token;
 var webAppUrl = "hidden";
-var ssId = "1nDvjny0p5myS2EHfUH6VX4p_LqinsQ1KR9m5LdQE7X0";
-var enId = "1fYvQNbyti16gsUKW2SrDJTk2HC3c6ct6I--1UbAAytM";
-var esId = "15t-VnYEwqqGtFurJdgQ89qGEgqCjAhIR6STZkBPDnOI";
-var ankiIdEn = "1-daqfXLUKNyqC1IPjBbc8HTtGDQl1UMEJV-1awIYIWM";
-var ankiIdEs = "1FhGPeU4lC92BEWCtOjsGB5jK4yFIms_GrjIpMWfXFes";
+var myId = {
+  en: "1x3F2l52fpJVA0XSnIcG1KKS0YN1evXTKf9VzDlYH-uI",
+  es: "1O5c1fpQ_-jHymuExE9UOmp9MQmxYCF2kVuvKXJegBQU",
+  fr: "1ntQ6ZPmKjXOyqhy737-lpFyIOesH1orDn3ixGQfRJpM",
+  re: "1mIZfFsZWCGm1rYewICDOYBzo7RMDmUKax829CQzZFkE",
+  "new": "1-daqfXLUKNyqC1IPjBbc8HTtGDQl1UMEJV-1awIYIWM",
+  "nuevo": "1FhGPeU4lC92BEWCtOjsGB5jK4yFIms_GrjIpMWfXFes",
+  "nouveau": "1dtnrjzfB5tlBhzHoQJJbMiB4xc41YoYgJrcbbxkiuoU"
+};
 
-var ankiEn = SpreadsheetApp.openById(ankiIdEn);
-var ankiSheetEn = ankiEn.getSheetByName("Anki");
-var lastRowEn = ankiSheetEn.getLastRow();
+var myAnswer = {
+  en: "Your question has been added!",
+  es: "Una duda nueva ha sido añadida!",
+  fr: "On a ajouté ton question!",
+  re: "Rest!!!",
+  "new": "Added to Anki!",
+  "nuevo": "Ya está en la lista!",
+  "nouveau": "C'est parti, c'est dans la liste!"
+};
 
-var ankiEs = SpreadsheetApp.openById(ankiIdEs);
-var ankiSheetEs = ankiEs.getSheetByName("Anki");
-var lastRowEs = ankiSheetEs.getLastRow();
+/* Adding phrases to Google Docs
+function addToDoc(lang, postId, postText) {
+  var myBody = DocumentApp.openById(myId[lang]).getBody();
+  
+  sendText(postId, myAnswer[lang]);
+  myBody.insertParagraph(1, "");
+  myBody.insertParagraph(1, postText.replace(/^..\s/, ""));
+} 
+*/
 
-function test() {
-  Logger.log(lastRowEs);
+function addToSpread(lang, postId, postText) {
+  var sheet = SpreadsheetApp.openById(myId[lang]).getSheetByName(lang);
+  var myText = postText;
+  var myRow = 2;
+  
+  if (lang !== "re") {
+    myText = postText.replace(/^..\s+/, "");
+  } 
+  
+  if (lang.length > 2) {
+    myRow = 1;
+  }
+  
+  sendText(postId, myAnswer[lang]);
+  sheet.insertRowBefore(myRow);
+  
+  if (/\s+-\s+/.test(myText)) {
+    sheet.getRange('A' + myRow).setValue(myText.replace(/\s+-.*/, ""));
+    sheet.getRange('B' + myRow).setValue(myText.replace(/.*-\s+/, ""));
+  } else {
+    sheet.getRange('A' + myRow).setValue(myText);
+  }
 }
 
 function getMe() {
@@ -39,82 +75,35 @@ function doGet(e) {
 }
 
 function doPost(e) {
-  //This is where telegram comes into play.
+  // This is where telegram comes into play.
   var data = JSON.parse(e.postData.contents);
   var text = data.message.text;
   var id = data.message.chat.id;
   var name = data.message.chat.first_name;
-  var answerEn = "Your question has been added!";
-  var answerEs = "Una duda nueva ha sido añadida!";
-
-  var docEn = DocumentApp.openById(enId)
-  var bodyEn = docEn.getBody();
-  var paragraphEn = bodyEn.insertParagraph(1, "");
   
-  var docEs = DocumentApp.openById(esId)
-  var bodyEs = docEs.getBody();
-  var paragraphEs = bodyEs.insertParagraph(1, "");
   
 //  var inputVar = "";
   
   if (/^nq/.test(text) || /^Nq/.test(text)) {
-    sendText(id, answerEn);
-    paragraphEn.appendText(text.replace(/^nq /, "").replace(/^Nq /, ""));
-    bodyEn.insertParagraph(1, "");
+    addToSpread("en", id, text);
+  } 
+  else if (/^dn/.test(text) || /^Dn/.test(text)) {
+    addToSpread("es", id, text);
+  } 
+  else if (/^aq/.test(text) || /^Aq/.test(text)) {
+    addToSpread("fr", id, text);
+  } 
+  else if (/^ae/.test(text) || /^Ae/.test(text)) {
+    addToSpread("new", id, text);
+  } 
+  else if (/^as/.test(text) || /^As/.test(text)) {
+    addToSpread("nuevo", id, text);
+  } 
+  else if (/^af/.test(text) || /^Af/.test(text)) {
+    addToSpread("nouveau", id, text);
+  } 
+  else {
+    addToSpread("re", id, text);
   }
-  
-  if (/^dn/.test(text) || /^Dn/.test(text)) {
-    sendText(id, answerEs);
-    paragraphEs.appendText(text.replace(/^dn /, "").replace(/^Dn /, ""));
-    bodyEs.insertParagraph(1, "");
-  }
-  
-  if (/^al/.test(text) || /^Al/.test(text)) {
-    var inputVar = text.split(" ");    
-    var matcher1 = new RegExp(inputVar[1], "i");
-    var matcher2 = new RegExp(inputVar[2], "i");
-    var matcher3 = new RegExp(inputVar[3], "i");
-        
-    for (var i = 1; i <= lastRowEs; i++) {
-      var getValuesEs = ankiSheetEs.getRange("A" + i + ":B" + i).getValues().toString();
-      var valLeftEs = ankiSheetEs.getRange("A" + i).getValues().toString();
-      var valRightEs = ankiSheetEs.getRange("B" + i).getValues().toString();
-      
-      var getValuesEn = ankiSheetEn.getRange("A" + i + ":B" + i).getValues().toString();
-      var valLeftEn = ankiSheetEn.getRange("A" + i).getValues().toString();
-      var valRightEn = ankiSheetEn.getRange("B" + i).getValues().toString();
-      
-      if (getValuesEn.match(matcher1) && inputVar[1] !== "") { 
-        if (inputVar.length === 2) {
-          sendText(id, valLeftEn + " - " + valRightEn); 
-        } 
-        else if (getValuesEn.match(matcher2) && inputVar[2] !== "") {
-          if (inputVar.length === 3) {
-            sendText(id, valLeftEn + " - " + valRightEn);
-          } 
-          else if (getValuesEn.match(matcher3) && inputVar[3] !== "") {
-            if (inputVar.length >= 4) {
-              sendText(id, valLeftEn + " - " + valRightEn);
-            } 
-          }
-        }
-      }
-      if (getValuesEs.match(matcher1) && inputVar[1] !== "") { 
-        if (inputVar.length === 2) {
-          sendText(id, valLeftEs + " - " + valRightEs); 
-        } 
-        else if (getValuesEs.match(matcher2) && inputVar[2] !== "") {
-          if (inputVar.length === 3) {
-            sendText(id, valLeftEs + " - " + valRightEs);
-          } 
-          else if (getValuesEs.match(matcher3) && inputVar[3] !== "") {
-            if (inputVar.length >= 4) {
-              sendText(id, valLeftEs + " - " + valRightEs);
-            } 
-          }
-        }
-      }
-    }
-  }  
 }
 
