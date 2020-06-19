@@ -80,7 +80,7 @@ function phrasesToAnki() {
   }
   
   if (!end) {
-    DocumentApp.getUi().alert('Please define start and end correctly!');
+    return DocumentApp.getUi().alert('Please define start and end correctly!');
   } else {
     ankiSetter();
   }
