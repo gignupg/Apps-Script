@@ -26,6 +26,7 @@ var emptyRowAudio = audioSheet.getLastRow();
 function myMenu() {
   var ui = SpreadsheetApp.getUi();
   ui.createMenu('Vocabulary')
+  .addItem("Format", "formatter")
   .addItem("Add new words", "execute")
   .addItem("Update the latest 50 to 200", "atVoice")
   .addToUi();
@@ -81,3 +82,26 @@ function atVoice() {
   range150.copyTo(sheet150);
   range200.copyTo(sheet200);
 }
+
+function formatter() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet();
+  var lastRow = sheet.getLastRow();
+  
+  // Getting all values
+  var range = sheet.getRange("A1:B" + lastRow);  
+  var inicialArray = range.getValues();
+  var resultArray = [].concat(inicialArray);
+  
+  // Replacing line-breaks with spaces and adding spaces after commas that don't have a space
+  for (var row = 0; row < lastRow; row++) {
+    for (var col = 0; col < 2; col++) {
+      if (!col) {
+        resultArray[row][col] = inicialArray[row][col].replace(/\n/g, " ").replace(/([^.!?]$)/g, "$1.");
+      } else {
+        resultArray[row][col] = inicialArray[row][col].replace(/(,)(\w)/g, "$1 $2");
+      } 
+    }
+  }
+  // Setting all values
+  range.setValues(resultArray)
+};
